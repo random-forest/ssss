@@ -1,5 +1,6 @@
 # Install node version manager
 curl -L https://git.io/n-install | bash
+
 n lts
 
 # Install yarn
