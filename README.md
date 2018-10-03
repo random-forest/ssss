@@ -16,4 +16,4 @@ sudo apt-get update && sudo apt-get install yarn
 yarn && yarn prestart
 
 # Run
-yarn start:server | yarn start:client
+yarn start:server | (sleep 3; yarn start:client)
