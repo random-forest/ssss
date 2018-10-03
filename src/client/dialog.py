@@ -12,9 +12,10 @@ HOST = ''
 SOCK_PORT = 30001
 
 class Dialog(QtWidgets.QDialog):
-
-    def __init__(self):
+    def __init__(self, action, options):
         super(Dialog, self).__init__()
+        self.action = action
+        self.options = options
         self.setWindowTitle('zalupa')
         self.setFixedSize(320, 240)
         self.setLayout(QtWidgets.QVBoxLayout())
@@ -31,12 +32,12 @@ class Dialog(QtWidgets.QDialog):
 
     def knob_build(self):
         self.knob = QtWidgets.QDial()
-        self.knob.setMinimum(0)
-        self.knob.setMaximum(440)
+        self.knob.setMinimum(self.options["min"])
+        self.knob.setMaximum(self.options["max"])
         self.knob.setNotchesVisible(True)
         self.knob.valueChanged.connect(self.value_changed)
 
-        self.label = QtWidgets.QLabel("VCO")
+        self.label = QtWidgets.QLabel(self.options["title"])
         self.label.setAlignment(QtCore.Qt.AlignCenter)
 
         self.layout().addWidget(self.knob)
@@ -47,6 +48,6 @@ class Dialog(QtWidgets.QDialog):
     # vco:function:set # lfo1:function:set # lfo2:function:set #
     # # # # # # # # # # # # # Events # # # # # # # # # # # # # #
     def value_changed(self):
-        data = json.dumps({'type': "vco:freq:set", 'value': self.knob.value()})
+        data = json.dumps({'type': self.action, 'value': self.knob.value()})
 
         self.soc.send(data)

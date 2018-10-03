@@ -12,7 +12,6 @@ const lfo2: Oscillator = new Sy.Oscillator("cos");
 ns.source = vco.mix(lfo1).exponent(lfo2);
 
 net.createServer((client: any) => {
-  ns.play();
   console.log("client connect -->", client.address().address);
 
   manageEvents(client);
@@ -54,3 +53,5 @@ function manageEvents(client: net.Socket): void {
     }
   });
 }
+
+ns.play();
