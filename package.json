@@ -1,0 +1,23 @@
+{
+  "name": "synth",
+  "version": "0.0.1",
+  "description": "(((((((((((",
+  "author": "nikto",
+  "license": "GPL",
+  "private": true,
+  "scripts": {
+    "build": "rm -rf dist ; tsc",
+    "decl": ". declare_modules.sh",
+    "start:client": "python src/client/main.py",
+    "start:server": "ts-node-dev --respawn src/server/index.ts"
+  },
+  "dependencies": {
+    "nodesynth": "^0.6.0",
+    "ts-node": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^10.11.3",
+    "ts-node-dev": "^1.0.0-pre.30",
+    "typescript": "^3.1.1"
+  }
+}
