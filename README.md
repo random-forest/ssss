@@ -6,4 +6,4 @@
 ### Build
 ```yarn && yarn prestart```
 ### Run
-```yarn start:server | yarn start:client```
+```yarn start:server | (sleep 5; yarn start:client)```
