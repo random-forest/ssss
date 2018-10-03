@@ -1,4 +1,6 @@
-### Install node version manager
+### Install Qt
+```pip install --user PySide2```
+### Install n
 ```curl -L https://git.io/n-install | bash && n lts```
 ### Install yarn
 ```curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -```
