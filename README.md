@@ -1,3 +1,6 @@
+# Install Qt
+pip install --user PySide2
+
 # Install node version manager
 curl -L https://git.io/n-install | bash
 
