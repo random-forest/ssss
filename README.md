@@ -6,6 +6,6 @@
 ```curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -```
 ```echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list```
 ### Build
-```yarn && yarn prestart```
+```yarn && yarn compile```
 ### Run
-```yarn start:server | (sleep 5; yarn start:client)```
+```yarn start``` or ```yarn dev```

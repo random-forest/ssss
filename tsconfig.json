@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib":[
-      "es2015"
-    ],
+    "target": "esnext",
+    "lib":["es2015"],
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": true,
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "stripInternal": true,
     "declaration": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "importHelpers": true,
     "paths": {
       "*": ["node_modules/*"]
     },

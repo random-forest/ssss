@@ -6,11 +6,18 @@
   "license": "GPL",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist ; tsc",
+    "clean": "rm -rf build dist assembly ; rm index.js",
+    "build": "rm -rf dist ; tsc ; javascript-obfuscator dist --target node --compact true --identifierNamesGenerator 'hexadecimal' --stringArray true --rotateStringArray true",
     "decl": ". declare_modules.sh",
-    "prestart": "yarn decl",
-    "start:client": "python src/client/main.py",
-    "start:server": "ts-node-dev --respawn src/server/index.ts"
+    "compile": "yarn decl && yarn build",
+    "start": "yarn start:server | (sleep 3; yarn dev:client)",
+    "start:server": "node dist/server/index-obfuscated.js",
+    "dev": "yarn dev:server | (sleep 3; yarn dev:client)",
+    "dev:client": "python src/client/main.py",
+    "dev:server": "ts-node-dev --respawn src/server/index.ts",
+    "asbuild:untouched": "asc assembly/index.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --validate",
+    "asbuild:optimized": "asc src/server/index.ts -b build/optimized.wasm -t build/optimized.wat --sourceMap --validate --optimize --noDebug",
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
   },
   "dependencies": {
     "nodesynth": "^0.6.0",
@@ -18,6 +25,9 @@
   },
   "devDependencies": {
     "@types/node": "^10.11.3",
+    "assemblyscript": "AssemblyScript/assemblyscript",
+    "javascript-obfuscator": "^0.18.1",
+    "npx": "^10.2.0",
     "ts-node-dev": "^1.0.0-pre.30",
     "typescript": "^3.1.1"
   }

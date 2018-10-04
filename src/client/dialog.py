@@ -16,6 +16,7 @@ class Dialog(QtWidgets.QDialog):
         super(Dialog, self).__init__()
         self.action = action
         self.options = options
+        self.claculate_step();
         self.setWindowTitle('zalupa')
         self.setFixedSize(320, 240)
         self.setLayout(QtWidgets.QVBoxLayout())
@@ -30,10 +31,20 @@ class Dialog(QtWidgets.QDialog):
         self.setStyleSheet(style)
         self.show()
 
+    def claculate_step(self):
+        step = str(self.options["step"]).split(".")
+
+        if len(step) < 2:
+            self.step = int(step[0])
+        else:
+            numbers = [i for i in step[1]]
+            self.step = int("1" + ("0" * len(numbers)))
+
     def knob_build(self):
         self.knob = QtWidgets.QDial()
         self.knob.setMinimum(self.options["min"])
         self.knob.setMaximum(self.options["max"])
+        
         self.knob.setNotchesVisible(True)
         self.knob.valueChanged.connect(self.value_changed)
 
@@ -48,6 +59,8 @@ class Dialog(QtWidgets.QDialog):
     # vco:function:set # lfo1:function:set # lfo2:function:set #
     # # # # # # # # # # # # # Events # # # # # # # # # # # # # #
     def value_changed(self):
+        print(float(self.knob.value()) / self.step)
+
         data = json.dumps({'type': self.action, 'value': self.knob.value()})
 
         self.soc.send(data)
