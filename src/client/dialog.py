@@ -12,55 +12,62 @@ HOST = ''
 SOCK_PORT = 30001
 
 class Dialog(QtWidgets.QDialog):
-    def __init__(self, action, options):
+    def __init__(self, w=640, h=480):
         super(Dialog, self).__init__()
-        self.action = action
-        self.options = options
-        self.claculate_step();
-        self.setWindowTitle('zalupa')
-        self.setFixedSize(320, 240)
-        self.setLayout(QtWidgets.QVBoxLayout())
-        self.layout().setAlignment(QtCore.Qt.AlignCenter)
+        self.setWindowTitle("_____")
+        self.setFixedSize(w, h)
+
+        self.setLayout(QtWidgets.QGridLayout())
+        self.layout().setContentsMargins(10,10,10,10)
+        self.layout().setSpacing(10)
 
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.soc.connect((HOST, SOCK_PORT))
-
         self.finished.connect(self.soc.close)
 
-        self.knob_build()
         self.setStyleSheet(style)
         self.show()
 
-    def claculate_step(self):
-        step = str(self.options["step"]).split(".")
-
+    def claculate_step(self, step_option):
+        step = str(step_option).split(".")
         if len(step) < 2:
-            self.step = int(step[0])
+            return int(step[0])
         else:
             numbers = [i for i in step[1]]
-            self.step = int("1" + ("0" * len(numbers)))
+            return int("1" + ("0" * len(numbers)))
 
-    def knob_build(self):
-        self.knob = QtWidgets.QDial()
-        self.knob.setMinimum(self.options["min"])
-        self.knob.setMaximum(self.options["max"])
-        
-        self.knob.setNotchesVisible(True)
-        self.knob.valueChanged.connect(self.value_changed)
+    def add_knob(self, action, options, row, col):
+        layout = QtWidgets.QVBoxLayout()
+        layout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.label = QtWidgets.QLabel(self.options["title"])
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        knob = QtWidgets.QDial()
+        knob.setMinimum(options["min"])
+        knob.setMaximum(options["max"])
+        knob.setNotchesVisible(True)
 
-        self.layout().addWidget(self.knob)
-        self.layout().addWidget(self.label)
+        knob.valueChanged.connect(
+            lambda x: self.value_changed(
+                knob = knob,
+                action=action, 
+                step=self.claculate_step(options["step"])
+            )
+        )
+
+        label = QtWidgets.QLabel(options["title"])
+        label.setAlignment(QtCore.Qt.AlignCenter)
+
+        layout.addWidget(knob)
+        layout.addWidget(label)
+        layout.addStretch()
+
+        self.layout().addLayout(layout, row, col, 1, 1)
 
     # # # # # # # # # # # # # EVENTS # # # # # # # # # # # # # # 
     # vco:freq:set     # lfo1:freq:set     # lfo2:freq:set     #
     # vco:function:set # lfo1:function:set # lfo2:function:set #
     # # # # # # # # # # # # # Events # # # # # # # # # # # # # #
-    def value_changed(self):
-        print(float(self.knob.value()) / self.step)
-
-        data = json.dumps({'type': self.action, 'value': self.knob.value()})
+    def value_changed(self, action, knob, step):
+        value = knob.value()
+        data = json.dumps({'type': action, 'value': value})
 
         self.soc.send(data)

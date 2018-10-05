@@ -5,15 +5,15 @@ import Sy  = require("nodesynth");
 
 const ns: Synth = new Sy.Synth(SYNTH_OPTIONS);
 
-const vco:  Oscillator = new Sy.Oscillator("sin", 0x000);
-const lfo1: Oscillator = new Sy.Oscillator("saw", 0x000);
-const lfo2: Oscillator = new Sy.Oscillator("cos", 0x000);
+var vco:  Oscillator = new Sy.Oscillator("sin", 0x000);
+var lfo1: Oscillator = new Sy.Oscillator("sin", 0x000);
+var lfo2: Oscillator = new Sy.Oscillator("sin", 0x000);
 
-ns.source = vco.mix(lfo1).exponent(lfo2);
+ns.source = vco.mix(lfo1).mix(lfo2);
 
 net.createServer((client: any): void => {
   console.log("client connect -->", client.address().address);
-
+  ns.play();
   manageEvents(client);
 
   client.on("end", () => {
@@ -54,4 +54,4 @@ function manageEvents(client: net.Socket): void {
   });
 }
 
-ns.play();
+// ns.play();
